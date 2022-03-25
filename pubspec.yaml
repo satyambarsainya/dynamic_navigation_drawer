@@ -1,7 +1,8 @@
 name: dynamic_navigation_drawer
 description: This flutter plugin is for dynamic navigation drawer
 version: 0.0.1
-homepage:
+author: Satyam Barsainya <barsainya.satyam.sb@gmail.com>
+homepage: https://github.com/satyambarsainya/dynamic_navigation_drawer
 
 environment:
   sdk: ">=2.16.1 <3.0.0"
