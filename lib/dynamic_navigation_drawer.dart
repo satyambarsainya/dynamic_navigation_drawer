@@ -32,15 +32,8 @@ class DynamicNavigationDrawer extends StatefulWidget {
       required this.tileList,
       this.accountName,
       this.accountEmail,
-      this.imageUrl}); // new code
+      this.imageUrl});
 
-  // static const MethodChannel _channel =
-  //     MethodChannel('dynamic_navigation_drawer');
-  //
-  // static Future<String?> get platformVersion async {
-  //   final String? version = await _channel.invokeMethod('getPlatformVersion');
-  //   return version;
-  // }
   @override
   DynamicNavigationDrawerState createState() => DynamicNavigationDrawerState();
 }
