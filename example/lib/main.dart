@@ -40,12 +40,10 @@ class _MyAppState extends State<MyApp> {
         menuNotSelectedColor: Colors.amber,
         backgroundColorForDrawerHeader: Colors.amber,
         backgroundColorForMenu: Colors.green,
-        // backgroundColorForDrawerPane: Colors.red,
         onTap: (String value) {
           print(value);
         },
       ),
-      // drawer: Drawer(),
       appBar: AppBar(
         title: const Text('Dynamic Navigation Drawer'),
       ),

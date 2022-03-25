@@ -17,7 +17,7 @@ class DynamicNavigationDrawer extends StatefulWidget {
   final String? imageUrl;
   final MaterialColor menuNotSelectedColor;
 
-  DynamicNavigationDrawer(
+  const DynamicNavigationDrawer(
       {required this.onTap,
       required this.backgroundColorForMenu,
       required this.backgroundColorForDrawerHeader,
@@ -51,7 +51,6 @@ class DynamicNavigationDrawerState extends State<DynamicNavigationDrawer> {
         widget.isDrawerHeaderRequired
             ? buildDrawerHeader(context)
             : Container(
-                // color: Colors.white,
                 ),
         buildDrawerMenu(context),
       ],
@@ -61,11 +60,8 @@ class DynamicNavigationDrawerState extends State<DynamicNavigationDrawer> {
   Widget buildDrawerMenu(BuildContext context) {
     return Expanded(
       child: Container(
-        color: widget.backgroundColorForDrawerPane == null
-            ? Colors.white
-            : widget.backgroundColorForDrawerPane,
-        width: MediaQuery.of(context).size.width /
-            (widget.drawerWidth == null ? 1.5 : widget.drawerWidth),
+        color: widget.backgroundColorForDrawerPane ?? Colors.white,
+        width: MediaQuery.of(context).size.width / widget.drawerWidth,
         height: MediaQuery.of(context).size.height,
         child: MediaQuery.removePadding(
           context: context,
@@ -75,7 +71,7 @@ class DynamicNavigationDrawerState extends State<DynamicNavigationDrawer> {
             children: [
               ListView.separated(
                 shrinkWrap: true,
-                physics: ClampingScrollPhysics(),
+                physics: const ClampingScrollPhysics(),
                 itemCount: widget.tileList.length,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
@@ -90,9 +86,7 @@ class DynamicNavigationDrawerState extends State<DynamicNavigationDrawer> {
                         color: selectedIndex == index
                             ? Colors.red
                             : widget.menuNotSelectedColor,
-                        height: widget.drawerMenuHeight == null
-                            ? 50
-                            : widget.drawerMenuHeight,
+                        height: widget.drawerMenuHeight,
                         child: Row(
                           children: [
                             Padding(
@@ -107,9 +101,7 @@ class DynamicNavigationDrawerState extends State<DynamicNavigationDrawer> {
                                   style: TextStyle(
                                       color: widget.menuFontColor,
                                       fontWeight: FontWeight.w500,
-                                      fontSize: widget.menuFontSize == null
-                                          ? 10.0
-                                          : widget.menuFontSize),
+                                      fontSize: widget.menuFontSize ?? 10.0),
                                 ),
                               ),
                             )
@@ -118,7 +110,7 @@ class DynamicNavigationDrawerState extends State<DynamicNavigationDrawer> {
                   );
                 },
                 separatorBuilder: (BuildContext context, int index) {
-                  return Divider(
+                  return const Divider(
                     height: 0.5,
                   );
                 },
@@ -133,33 +125,24 @@ class DynamicNavigationDrawerState extends State<DynamicNavigationDrawer> {
 
   Widget buildDrawerHeader(BuildContext context) {
     return Container(
-      // height: 200,
       width: MediaQuery.of(context).size.width /
-          (widget.drawerWidth == null ? 1.5 : widget.drawerWidth),
+          (widget.drawerWidth ?? 1.5),
       child: UserAccountsDrawerHeader(
-        margin: EdgeInsets.only(bottom: 0.0),
-        decoration: BoxDecoration(
+        margin: const EdgeInsets.only(bottom: 0.0),
+        decoration: const BoxDecoration(
           color: Colors.tealAccent,
         ),
-        accountName: Text(widget.accountName.toString() == null
-            ? "ABC"
-            : widget.accountName.toString()),
-        accountEmail: Text(widget.accountEmail.toString() == null
-            ? "abc@gmail.com"
-            : widget.accountEmail.toString()),
+        accountName: Text(widget.accountName.toString() ?? "ABC"),
+        accountEmail: Text(widget.accountEmail.toString() ?? "abc@gmail.com"),
         currentAccountPicture: CircleAvatar(
           backgroundColor: Theme.of(context).platform == TargetPlatform.iOS
               ? Colors.blue
               : Colors.white,
           child: Container(
-            // width: 200,
-            // height: 200,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
-                  image: NetworkImage(widget.imageUrl.toString() == null
-                      ? "https://www.w3schools.com/howto/img_avatar.png"
-                      : widget.imageUrl.toString()),
+                  image: NetworkImage(widget.imageUrl.toString() ?? "https://www.w3schools.com/howto/img_avatar.png"),
                   fit: BoxFit.fill),
             ),
           ),
