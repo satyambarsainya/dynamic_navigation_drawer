@@ -1,9 +1,10 @@
 import 'package:dynamic_navigation_drawer/dynamic_navigation_drawer.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 void main() {
-  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: const MyApp()));
+  runApp(const MaterialApp(debugShowCheckedModeBanner: false, home: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -16,18 +17,28 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarBrightness: Brightness.light));
-    var tileList = {
+    var tileListWithIcon = {
       "Profile": Icons.people,
       "Home": Icons.home,
       "Settings": Icons.settings,
       "Logout": Icons.logout
     };
+
+    List titleList = [];
+    titleList.add("Profile");
+    titleList.add("Home");
+    titleList.add("Settings");
+    titleList.add("Logout");
+
     return Scaffold(
       drawer: DynamicNavigationDrawer(
-        tileList: tileList,
+        tileListWithIcon: tileListWithIcon,
+        tileListWithIconRequired: true,
+        onlyTileListRequired: false,
+        tileList: titleList,
         isDrawerHeaderRequired: true,
         accountName: "Satyam Barsainya",
         accountEmail: "barsainya.satyam.sb@gmail.com",
@@ -41,7 +52,9 @@ class _MyAppState extends State<MyApp> {
         backgroundColorForDrawerHeader: Colors.amber,
         backgroundColorForMenu: Colors.green,
         onTap: (String value) {
-          print(value);
+          if (kDebugMode) {
+            print(value);
+          }
         },
       ),
       appBar: AppBar(
@@ -49,7 +62,7 @@ class _MyAppState extends State<MyApp> {
       ),
       body: GestureDetector(
         onTap: () {},
-        child: Center(
+        child: const Center(
           child: Text('Dynamic Navigation Drawer'),
         ),
       ),

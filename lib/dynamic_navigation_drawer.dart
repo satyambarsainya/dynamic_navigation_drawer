@@ -7,7 +7,10 @@ class DynamicNavigationDrawer extends StatefulWidget {
   final MaterialColor? backgroundColorForDrawerPane;
   final double drawerWidth;
   final double drawerMenuHeight;
-  final Map<String, IconData> tileList;
+  final Map<String, IconData> tileListWithIcon;
+  final List? tileList;
+  final bool onlyTileListRequired;
+  final bool tileListWithIconRequired;
   final Color? menuFontColor;
   final double? menuFontSize;
   final TextAlign? menuTextAlign;
@@ -18,7 +21,8 @@ class DynamicNavigationDrawer extends StatefulWidget {
   final MaterialColor menuNotSelectedColor;
 
   const DynamicNavigationDrawer(
-      {required this.onTap,
+      {Key? key,
+      required this.onTap,
       required this.backgroundColorForMenu,
       required this.backgroundColorForDrawerHeader,
       this.backgroundColorForDrawerPane,
@@ -29,10 +33,14 @@ class DynamicNavigationDrawer extends StatefulWidget {
       this.menuTextAlign,
       required this.isDrawerHeaderRequired,
       required this.menuNotSelectedColor,
-      required this.tileList,
+      required this.tileListWithIcon,
       this.accountName,
       this.accountEmail,
-      this.imageUrl});
+      this.imageUrl,
+      this.tileList,
+      required this.onlyTileListRequired,
+      required this.tileListWithIconRequired})
+      : super(key: key);
 
   @override
   DynamicNavigationDrawerState createState() => DynamicNavigationDrawerState();
@@ -43,21 +51,46 @@ class DynamicNavigationDrawerState extends State<DynamicNavigationDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: widget.isDrawerHeaderRequired
-          ? CrossAxisAlignment.start
-          : CrossAxisAlignment.start,
-      children: [
-        widget.isDrawerHeaderRequired
-            ? buildDrawerHeader(context)
-            : Container(
-                ),
-        buildDrawerMenu(context),
-      ],
-    );
+    if (widget.onlyTileListRequired == true &&
+        widget.tileListWithIconRequired == false &&
+        widget.tileList != null &&
+        widget.tileList?.length != 0) {
+      return Column(
+        crossAxisAlignment: widget.isDrawerHeaderRequired
+            ? CrossAxisAlignment.start
+            : CrossAxisAlignment.start,
+        children: [
+          widget.isDrawerHeaderRequired
+              ? buildDrawerHeader(context)
+              : Container(),
+          buildDrawerMenuWithoutIcon(context)
+        ],
+      );
+    } else if (widget.onlyTileListRequired == false &&
+        widget.tileListWithIconRequired == true &&
+        widget.tileListWithIcon?.length != 0) {
+      return Column(
+        crossAxisAlignment: widget.isDrawerHeaderRequired
+            ? CrossAxisAlignment.start
+            : CrossAxisAlignment.start,
+        children: [
+          widget.isDrawerHeaderRequired
+              ? buildDrawerHeader(context)
+              : Container(),
+          buildDrawerMenuWithIcon(context),
+        ],
+      );
+    } else if (widget.onlyTileListRequired == true &&
+        widget.tileListWithIconRequired == true) {
+      throw Exception(
+          "You can set either onlyTileListRequired or tileListWithIconRequired as true and not both the flag");
+    } else {
+      throw Exception(
+          "Widget can't be render as the tileList or tileListWithIcon is empty");
+    }
   }
 
-  Widget buildDrawerMenu(BuildContext context) {
+  Widget buildDrawerMenuWithoutIcon(BuildContext context) {
     return Expanded(
       child: Container(
         color: widget.backgroundColorForDrawerPane ?? Colors.white,
@@ -69,53 +102,124 @@ class DynamicNavigationDrawerState extends State<DynamicNavigationDrawer> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              ListView.separated(
+              ListView.builder(
                 shrinkWrap: true,
                 physics: const ClampingScrollPhysics(),
-                itemCount: widget.tileList.length,
+                itemCount: widget.tileList?.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    onTap: () {
-                      print(widget.tileList.keys.elementAt(index));
-                      setState(() {
-                        widget.onTap(widget.tileList.keys.elementAt(index));
-                        selectedIndex = index;
-                      });
-                    },
-                    child: Container(
-                        color: selectedIndex == index
-                            ? Colors.red
-                            : widget.menuNotSelectedColor,
-                        height: widget.drawerMenuHeight,
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child:
-                                  Icon(widget.tileList.values.elementAt(index)),
-                            ),
-                            Expanded(
-                              child: Center(
-                                child: Text(
-                                  widget.tileList.keys.elementAt(index),
-                                  style: TextStyle(
-                                      color: widget.menuFontColor,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: widget.menuFontSize ?? 10.0),
-                                ),
+                  return Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            widget.onTap(
+                                widget.tileListWithIcon.keys.elementAt(index));
+                            selectedIndex = index;
+                          });
+                        },
+                        child: Container(
+                          color: selectedIndex == index
+                              ? Colors.red
+                              : widget.menuNotSelectedColor,
+                          height: widget.drawerMenuHeight,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Center(
+                                child: widget.tileListWithIcon.keys != null
+                                    ? Text(
+                                        widget.tileListWithIcon.keys
+                                            .elementAt(index),
+                                        style: TextStyle(
+                                            color: widget.menuFontColor,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize:
+                                                widget.menuFontSize ?? 10.0),
+                                      )
+                                    : Container(),
                               ),
-                            )
-                          ],
-                        )),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return const Divider(
-                    height: 0.5,
+                              Container()
+                            ],
+                          ),
+                        ),
+                      ),
+                      const Divider(height: 0.3)
+                    ],
                   );
                 },
               ),
-              // Divider()
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildDrawerMenuWithIcon(BuildContext context) {
+    return Expanded(
+      child: Container(
+        color: widget.backgroundColorForDrawerPane ?? Colors.white,
+        width: MediaQuery.of(context).size.width / widget.drawerWidth,
+        height: MediaQuery.of(context).size.height,
+        child: MediaQuery.removePadding(
+          context: context,
+          removeTop: widget.isDrawerHeaderRequired ? true : false,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
+                itemCount: widget.tileListWithIcon.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            widget.onTap(
+                                widget.tileListWithIcon.keys.elementAt(index));
+                            selectedIndex = index;
+                          });
+                        },
+                        child: Container(
+                          color: selectedIndex == index
+                              ? Colors.red
+                              : widget.menuNotSelectedColor,
+                          height: widget.drawerMenuHeight,
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: widget.tileListWithIcon.values != null
+                                    ? Icon(widget.tileListWithIcon.values
+                                        .elementAt(index))
+                                    : Container(),
+                              ),
+                              Expanded(
+                                child: Center(
+                                  child: widget.tileListWithIcon.keys != null
+                                      ? Text(
+                                          widget.tileListWithIcon.keys
+                                              .elementAt(index),
+                                          style: TextStyle(
+                                              color: widget.menuFontColor,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize:
+                                                  widget.menuFontSize ?? 10.0),
+                                        )
+                                      : Container(),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      const Divider(height: 0.3)
+                    ],
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -124,16 +228,15 @@ class DynamicNavigationDrawerState extends State<DynamicNavigationDrawer> {
   }
 
   Widget buildDrawerHeader(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width /
-          (widget.drawerWidth ?? 1.5),
+    return SizedBox(
+      width: MediaQuery.of(context).size.width / (widget.drawerWidth),
       child: UserAccountsDrawerHeader(
         margin: const EdgeInsets.only(bottom: 0.0),
         decoration: const BoxDecoration(
           color: Colors.tealAccent,
         ),
-        accountName: Text(widget.accountName.toString() ?? "ABC"),
-        accountEmail: Text(widget.accountEmail.toString() ?? "abc@gmail.com"),
+        accountName: Text(widget.accountName.toString()),
+        accountEmail: Text(widget.accountEmail.toString()),
         currentAccountPicture: CircleAvatar(
           backgroundColor: Theme.of(context).platform == TargetPlatform.iOS
               ? Colors.blue
@@ -142,7 +245,7 @@ class DynamicNavigationDrawerState extends State<DynamicNavigationDrawer> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
-                  image: NetworkImage(widget.imageUrl.toString() ?? "https://www.w3schools.com/howto/img_avatar.png"),
+                  image: NetworkImage(widget.imageUrl.toString()),
                   fit: BoxFit.fill),
             ),
           ),
