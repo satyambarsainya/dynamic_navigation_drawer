@@ -1,5 +1,5 @@
 name: dynamic_navigation_drawer
-description: This flutter plugin is for dynamic navigation drawer
+description: This flutter plugin can be used to render the dynamic navigation drawer, where developer can pass the list of title and icons for the navigation drawer.
 version: 0.0.3
 homepage: https://github.com/satyambarsainya/dynamic_navigation_drawer
 

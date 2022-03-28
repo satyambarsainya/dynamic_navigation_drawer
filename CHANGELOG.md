@@ -11,4 +11,9 @@
 ## 0.0.3
 
 * Added drawer menu without icon support
-* Now developer can pass the Map<String,IconData> or List<String> in DynamicNavigationDrawer widget  
+* Now developer can pass the Map<String,IconData> or List<String> in DynamicNavigationDrawer widget
+
+## 0.0.4
+
+* Separated the tileListWithIcon and tileListWithoutIcon widget.
+* Please refer the example to understand the use of the widget.

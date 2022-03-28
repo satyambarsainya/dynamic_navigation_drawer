@@ -1,4 +1,4 @@
-import 'package:dynamic_navigation_drawer/dynamic_navigation_drawer.dart';
+import 'package:dynamic_navigation_drawer/dynamic_navigation_drawer_with_icon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,6 +15,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  late int selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -34,11 +36,10 @@ class _MyAppState extends State<MyApp> {
     titleList.add("Logout");
 
     return Scaffold(
-      drawer: DynamicNavigationDrawer(
+      // Below widget can be used to render Dynamic Navigation Drawer with icon
+      drawer: DynamicNavigationDrawerWithIcon(
+        initialSelectionIndex: selectedIndex,
         tileListWithIcon: tileListWithIcon,
-        tileListWithIconRequired: true,
-        onlyTileListRequired: false,
-        tileList: titleList,
         isDrawerHeaderRequired: true,
         accountName: "Satyam Barsainya",
         accountEmail: "barsainya.satyam.sb@gmail.com",
@@ -51,20 +52,40 @@ class _MyAppState extends State<MyApp> {
         menuNotSelectedColor: Colors.amber,
         backgroundColorForDrawerHeader: Colors.amber,
         backgroundColorForMenu: Colors.green,
-        onTap: (String value) {
+        onTap: (String value, int index) {
           if (kDebugMode) {
             print(value);
           }
         },
       ),
+      // Below widget can be used to render Dynamic Navigation Drawer without icon
+      // drawer: DynamicNavigationDrawerWithoutIcon(
+      //   tileList: titleList,
+      //   initialSelectionIndex: selectedIndex,
+      //   isDrawerHeaderRequired: true,
+      //   accountName: "Satyam Barsainya",
+      //   accountEmail: "barsainya.satyam.sb@gmail.com",
+      //   imageUrl: "https://www.w3schools.com/howto/img_avatar.png",
+      //   drawerMenuHeight: 50,
+      //   drawerWidth: 1.5,
+      //   menuFontColor: Colors.white,
+      //   menuFontSize: 15,
+      //   menuTextAlign: TextAlign.center,
+      //   menuNotSelectedColor: Colors.amber,
+      //   backgroundColorForDrawerHeader: Colors.amber,
+      //   backgroundColorForMenu: Colors.green,
+      //   onTap: (String value, int index) {
+      //     selectedIndex = index;
+      //     if (kDebugMode) {
+      //       print(value);
+      //     }
+      //   },
+      // ),
       appBar: AppBar(
         title: const Text('Dynamic Navigation Drawer'),
       ),
-      body: GestureDetector(
-        onTap: () {},
-        child: const Center(
-          child: Text('Dynamic Navigation Drawer'),
-        ),
+      body: const Center(
+        child: Text('Dynamic Navigation Drawer'),
       ),
     );
   }
