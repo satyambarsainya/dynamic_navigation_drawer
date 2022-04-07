@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//ignore: must_be_immutable
 class DynamicNavigationDrawerWithIcon extends StatefulWidget {
   final Function(String, int) onTap;
   final MaterialColor backgroundColorForMenu;

@@ -17,3 +17,7 @@
 
 * Separated the tileListWithIcon and tileListWithoutIcon widget.
 * Please refer the example to understand the use of the widget.
+
+## 0.0.5
+
+* Minor warnings fixed as part of this release
